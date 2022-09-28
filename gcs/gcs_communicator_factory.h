@@ -1,7 +1,7 @@
 #ifndef GCS_COMMUNICATOR_FACTORY_H
 #define GCS_COMMUNICATOR_FACTORY_H
 
-#include "abstract_communicator_factory.h"
+#include "../common/abstract_communicator_factory.h"
 
 namespace domain
 {

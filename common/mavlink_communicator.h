@@ -2,7 +2,7 @@
 #define MAVLINK_COMMUNICATOR_H
 
 // MAVLink
-#include <mavlink_types.h>
+#include "../3dparty/mavlink_v2/mavlink_types.h"
 
 // Qt
 #include <QObject>

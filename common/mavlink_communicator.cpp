@@ -1,10 +1,10 @@
 #include "mavlink_communicator.h"
 
 // MAVLink
-#include <mavlink.h>
+#include "../3dparty/mavlink_v2/ardupilotmega/mavlink.h"
 
 // Internal
-#include "abstract_link.h"
+#include "links/abstract_link.h"
 
 using namespace domain;
 

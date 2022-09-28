@@ -1,7 +1,7 @@
 #ifndef SEND_VFR_HUD_HANDLER_H
 #define SEND_VFR_HUD_HANDLER_H
 
-#include "abstract_handler.h"
+#include "../common/handlers/abstract_handler.h"
 
 namespace domain
 {

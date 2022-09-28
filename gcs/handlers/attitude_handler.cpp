@@ -1,7 +1,7 @@
 #include "attitude_handler.h"
 
 // MAVLink
-#include <mavlink.h>
+#include "../3dparty/mavlink_v2/ardupilotmega/mavlink.h"
 
 // Qt
 #include <QtMath>

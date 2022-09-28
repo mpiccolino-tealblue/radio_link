@@ -1,16 +1,16 @@
 #include "send_home_position_handler.h"
 
 // MAVLink
-#include <mavlink.h>
+#include "../3dparty/mavlink_v2/ardupilotmega/mavlink.h"
 
 // Qt
 #include <QDebug>
 
 // Internal
 #include "uav_model.h"
-#include "mavlink_communicator.h"
+#include "../common/mavlink_communicator.h"
 
-#include "mavlink_protocol_helpers.h"
+#include "../common/mavlink_protocol_helpers.h"
 
 using namespace domain;
 

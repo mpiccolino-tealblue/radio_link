@@ -2,11 +2,11 @@
 #include <QCoreApplication>
 
 // Internal
-#include "udp_link.h"
-#include "serial_link.h"
+#include "../common/links/udp_link.h"
+//#include "../common/links/serial_link.h"
 
 #include "gcs_communicator_factory.h"
-#include "mavlink_communicator.h"
+#include "../common/mavlink_communicator.h"
 
 int main(int argc, char* argv[])
 {

@@ -1,18 +1,18 @@
 #include "uav_communicator_factory.h"
 
 // MAVLink
-#include <mavlink.h>
+#include "../3dparty/mavlink_v2/ardupilotmega/mavlink.h"
 
 // Internal
-#include "mavlink_communicator.h"
+#include "../common/mavlink_communicator.h"
 
-#include "heartbeat_handler.h"
-#include "send_system_status_handler.h"
-#include "send_position_handler.h"
-#include "send_attitude_handler.h"
-#include "send_vfr_hud_handler.h"
-#include "send_home_position_handler.h"
-#include "send_gps_raw_handler.h"
+#include "../common/handlers/heartbeat_handler.h"
+#include "handlers/send_system_status_handler.h"
+#include "handlers/send_position_handler.h"
+#include "handlers/send_attitude_handler.h"
+#include "handlers/send_vfr_hud_handler.h"
+#include "handlers/send_home_position_handler.h"
+#include "handlers/send_gps_raw_handler.h"
 
 using namespace domain;
 

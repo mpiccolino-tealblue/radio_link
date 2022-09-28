@@ -1,7 +1,7 @@
 #include "abstract_handler.h"
 
 // Internal
-#include "mavlink_communicator.h"
+#include "../common/mavlink_communicator.h"
 
 using namespace domain;
 

@@ -1,7 +1,7 @@
 #ifndef SEND_HOME_POSITION_HANDLER_H
 #define SEND_HOME_POSITION_HANDLER_H
 
-#include "abstract_handler.h"
+#include "../common/handlers/abstract_handler.h"
 
 namespace domain
 {

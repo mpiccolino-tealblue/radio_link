@@ -1,12 +1,13 @@
 // Qt
 #include <QCoreApplication>
+#include <QTimer>
 
 // Internal
-#include "udp_link.h"
+#include "../common/links/udp_link.h"
 
 #include "uav_model.h"
 #include "uav_communicator_factory.h"
-#include "mavlink_communicator.h"
+#include "../common/mavlink_communicator.h"
 
 int main(int argc, char* argv[])
 {
