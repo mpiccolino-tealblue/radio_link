@@ -3,8 +3,7 @@ QT += serialport positioning network
 HEADERS += \
     $$PWD \
     $$PWD/links/endpoint.h \
-    3rdparty/mavlink_v2/* \
-    3rdparty/mavlink_v2/ardupilotmega/*
+    3rdparty/mavlink_v2/*
 
 HEADERS += \
     $$PWD/abstract_communicator_factory.h \

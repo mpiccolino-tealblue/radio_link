@@ -1,7 +1,7 @@
 #include "mavlink_communicator.h"
 
 // MAVLink
-#include "../3dparty/mavlink_v2/ardupilotmega/mavlink.h"
+#include "../3dparty/mavlink_v2/AGU_MAVLINK/mavlink.h"
 
 // Internal
 #include "links/abstract_link.h"

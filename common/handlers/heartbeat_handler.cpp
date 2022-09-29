@@ -1,10 +1,10 @@
 #include "heartbeat_handler.h"
 
 // MAVLink
-#include "../3dparty/mavlink_v2/ardupilotmega/mavlink.h"
+#include "../3dparty/mavlink_v2/AGU_MAVLINK/mavlink.h"
 
 // Qt
-#include <QDebug>
+#include <iostream>
 
 // Internal
 #include "../common/mavlink_communicator.h"
@@ -25,6 +25,10 @@ void HeartbeatHandler::timerEvent(QTimerEvent* event)
     mavlink_message_t message;
     mavlink_heartbeat_t heartbeat;
     heartbeat.type = m_type;
+    heartbeat.autopilot=MAV_AUTOPILOT_GENERIC;
+    heartbeat.base_mode=MAV_MODE_GUIDED_ARMED;
+    heartbeat.custom_mode=0;
+    heartbeat.system_status=MAV_STATE_ACTIVE;
 
     mavlink_msg_heartbeat_encode(m_communicator->systemId(),
                                  m_communicator->componentId(),
@@ -40,6 +44,6 @@ void HeartbeatHandler::processMessage(const mavlink_message_t& message)
     mavlink_heartbeat_t heartbeat;
     mavlink_msg_heartbeat_decode(&message, &heartbeat);
 
-    qDebug() << "Heartbeat received, system type:" << heartbeat.type
-             << "System status:" << heartbeat.system_status;
+    std::cout << "Heartbeat received, system type:" << heartbeat.type
+             << "System status:" << heartbeat.system_status << std::endl;
 }
