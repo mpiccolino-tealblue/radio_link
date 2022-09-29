@@ -1,5 +1,6 @@
 // Qt
-#include <QCoreApplication>
+#include <QGuiApplication>
+#include <iostream>
 
 // Internal
 #include "../common/links/udp_link.h"
@@ -11,12 +12,11 @@
 
 int main(int argc, char* argv[])
 {
-    QCoreApplication app(argc, argv);
-
+    QGuiApplication app(argc, argv);
+    qDebug() << "Test";
     domain::GcsCommunicatorFactory factory;
     domain::MavLinkCommunicator* communicator = factory.create();
     communicator->setParent(&app);
-
     //domain::UdpLink link(14550); link.addEndpoint(domain::Endpoint(QHostAddress::LocalHost, 14551));
 
     domain::SerialLink link("/dev/ttyUSB0", 57600);
@@ -24,6 +24,7 @@ int main(int argc, char* argv[])
 
     communicator->addLink(&link, MAVLINK_COMM_0);
     link.connectLink();
+    std::cout << "link is " << link.isConnected() << std::endl;
 
     return app.exec();
 }
