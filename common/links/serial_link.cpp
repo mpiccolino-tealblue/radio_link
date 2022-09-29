@@ -72,9 +72,9 @@ void SerialLink::setBaudRate(qint32 baudRate)
 bool SerialLink::sendDataImpl(const QByteArray& data)
 {
     if (m_port->isWritable()) {
-        std::cout << "Port is writable\n";
+        //std::cout << "Port is writable\n";
         bool awrite = m_port->write(data.data(), data.size()) > 0;
-        if (awrite) std::cout << "Wrote " << data.toHex().toStdString() << std::endl;
+        //if (awrite) std::cout << "Wrote " << data.toHex().toStdString() << std::endl;
         return awrite;
     }
 
