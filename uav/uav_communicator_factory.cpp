@@ -24,7 +24,7 @@ MavLinkCommunicator* UavCommunicatorFactory::create()
 {
     MavLinkCommunicator* communicator = new MavLinkCommunicator(1, 0);
 
-    new domain::HeartbeatHandler(MAV_TYPE_FIXED_WING, communicator);
+    new domain::HeartbeatHandler(MAV_TYPE_HELICOPTER, communicator);
     new domain::SendSystemStatusHandler(communicator, m_model);
     new domain::SendPositionHandler(communicator, m_model);
     new domain::SendAttitudeHandler(communicator, m_model);

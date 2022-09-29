@@ -18,9 +18,10 @@ int main(int argc, char* argv[])
     domain::MavLinkCommunicator* communicator = factory.create();
     communicator->setParent(&app);
 
-    domain::UdpLink link(14551, QString("127.0.0.1"), 14550);
+    domain::UdpLink link(14551);
+    link.addEndpoint(domain::Endpoint(QHostAddress::LocalHost, 14550));
     communicator->addLink(&link, MAVLINK_COMM_0);
-    link.up();
+    link.connectLink();
 
     return app.exec();
 }

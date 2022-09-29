@@ -74,7 +74,8 @@ bool SerialLink::sendDataImpl(const QByteArray& data)
 
 void SerialLink::readSerialData()
 {
-    if (m_port->isReadable()) this->receiveData(m_port->readAll());
+    if (m_port->isReadable()) qDebug() << m_port->readAll();
+    //if (m_port->isReadable()) this->receiveData(m_port->readAll());
 }
 
 void SerialLink::onError(int error)

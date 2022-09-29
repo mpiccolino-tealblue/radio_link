@@ -5,107 +5,139 @@
 
 using namespace domain;
 
-UdpLink::UdpLink(int rxPort, const QString& address, int txPort,
-                 QObject* parent):
+UdpLink::UdpLink(quint16 port, QObject* parent):
     AbstractLink(parent),
     m_socket(new QUdpSocket(this)),
-    m_rxPort(rxPort),
-    m_address(address),
-    m_txPort(txPort)
+    m_port(port),
+    m_autoResponse(true)
 {
-    QObject::connect(m_socket, &QUdpSocket::readyRead,
-                     this, &UdpLink::readPendingDatagrams);
+    QObject::connect(m_socket, &QUdpSocket::readyRead, this, &UdpLink::onReadyRead);
+    // TODO: QOverload<QUdpSocket::SocketError>::of(&QUdpSocket::error),
+    connect(m_socket, static_cast<void (QUdpSocket::*)
+            (QUdpSocket::SocketError)>(&QUdpSocket::error),
+            this, &AbstractLink::onSocketError);
 }
 
-bool UdpLink::isUp() const
+bool UdpLink::isConnected() const
 {
     return m_socket->state() == QAbstractSocket::BoundState;
 }
 
-int UdpLink::rxPort() const
+quint16 UdpLink::port() const
 {
-    return m_rxPort;
+    return m_port;
 }
 
-QString UdpLink::address() const
+EndpointList UdpLink::endpoints() const
 {
-    return m_address;
+    return m_endpoints;
 }
 
-int UdpLink::txPort() const
+bool UdpLink::autoResponse() const
 {
-    return m_txPort;
+    return m_autoResponse;
 }
 
-void UdpLink::up()
+int UdpLink::count() const
 {
-    if (this->isUp()) return;
+    return m_endpoints.count();
+}
 
-    if (!m_socket->bind(m_rxPort))
+Endpoint UdpLink::endpoint(int index) const
+{
+    return m_endpoints.at(index);
+}
+
+void UdpLink::connectLink()
+{
+    if (this->isConnected() || m_port == 0) return;
+
+    if (!m_socket->bind(m_port))
     {
-        qWarning("UDP connection error: '%s'!",
-                 qPrintable(m_socket->errorString()));
-
         m_socket->close();
     }
     else
     {
-        emit upChanged(true);
+        emit connectedChanged(true);
     }
 }
 
-void UdpLink::down()
+void UdpLink::disconnectLink()
 {
-    if (!this->isUp()) return;
+    if (!this->isConnected()) return;
 
     m_socket->close();
-    emit upChanged(false);
+    emit connectedChanged(false);
 }
 
-void UdpLink::sendData(const QByteArray& data)
+void UdpLink::setPort(quint16 port)
 {
-    m_socket->writeDatagram(data, QHostAddress(m_address), m_txPort);
-}
+    if (m_port == port) return;
 
-void UdpLink::setRxPort(int port)
-{
-    if (m_rxPort == port) return;
+    m_port = port;
 
-    m_rxPort = port;
-
-    if (this->isUp())
+    if (this->isConnected())
     {
-        this->down();
-        this->up();
+        this->disconnectLink();
+        this->connectLink();
     }
 
-    emit rxPortChanged(port);
+    emit portChanged(port);
 }
 
-void UdpLink::setAddress(const QString& address)
+void UdpLink::addEndpoint(const Endpoint& endpoint)
 {
-    if (m_address == address) return;
-
-    m_address = address;
-    emit addressChanged(address);
+    m_endpoints.append(endpoint);
+    emit endpointsChanged(m_endpoints);
 }
 
-void UdpLink::setTxPort(int port)
+void UdpLink::removeEndpoint(const Endpoint& endpoint)
 {
-    if (m_txPort == port) return;
-
-    m_txPort = port;
-    emit txPortChanged(port);
+    m_endpoints.removeOne(endpoint);
+    emit endpointsChanged(m_endpoints);
 }
 
-void UdpLink::readPendingDatagrams()
+void UdpLink::clearEndpoints()
+{
+    m_endpoints.clear();
+    emit endpointsChanged(m_endpoints);
+}
+
+void UdpLink::setAutoResponse(bool autoResponse)
+{
+    if (m_autoResponse == autoResponse) return;
+
+    m_autoResponse = autoResponse;
+    emit autoResponseChanged(autoResponse);
+}
+
+bool UdpLink::sendDataImpl(const QByteArray& data)
+{
+    bool ok = false;
+    for (const Endpoint& endpoint: m_endpoints)
+    {
+         if (m_socket->writeDatagram(data, endpoint.address(), endpoint.port()) > 0) ok = true;
+    }
+    return ok;
+}
+
+void UdpLink::onReadyRead()
 {
     while (m_socket->hasPendingDatagrams())
     {
         QByteArray datagram;
         datagram.resize(m_socket->pendingDatagramSize());
-        m_socket->readDatagram(datagram.data(), datagram.size());
 
-        emit dataReceived(datagram);
+        QHostAddress address;
+        quint16 port;
+        m_socket->readDatagram(datagram.data(), datagram.size(), &address, &port);
+
+        Endpoint endpoint(address, port);
+        if (m_autoResponse && !m_endpoints.contains(endpoint))
+        {
+            this->addEndpoint(endpoint);
+        }
+
+        this->receiveData(datagram);
     }
 }

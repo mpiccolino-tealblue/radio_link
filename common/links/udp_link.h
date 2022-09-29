@@ -1,7 +1,9 @@
 #ifndef UDP_LINK_H
 #define UDP_LINK_H
 
+// Internal
 #include "abstract_link.h"
+#include "endpoint.h"
 
 class QUdpSocket;
 
@@ -11,43 +13,44 @@ namespace domain
     {
         Q_OBJECT
 
-        Q_PROPERTY(int rxPort READ rxPort WRITE setRxPort NOTIFY rxPortChanged)
-        Q_PROPERTY(QString address READ address WRITE setAddress NOTIFY addressChanged)
-        Q_PROPERTY(int txPort READ txPort WRITE setTxPort NOTIFY txPortChanged)
-
     public:
-        UdpLink(int rxPort, const QString& address, int txPort,
-                QObject* parent = nullptr);
+        UdpLink(quint16 port = 0, QObject* parent = nullptr);
 
-        bool isUp() const override;
+        bool isConnected() const override;
 
-        int rxPort() const;
-        QString address() const;
-        int txPort() const;
+        quint16 port() const;
+        EndpointList endpoints() const;
+        bool autoResponse() const;
+
+        int count() const;
+        Endpoint endpoint(int index) const;
 
     public slots:
-        void up() override;
-        void down() override;
+        void connectLink() override;
+        void disconnectLink() override;
 
-        void sendData(const QByteArray& data) override;
-
-        void setRxPort(int port);
-        void setAddress(const QString& address);
-        void setTxPort(int port);
+        void setPort(quint16 port);
+        void addEndpoint(const Endpoint& endpoint);
+        void removeEndpoint(const Endpoint& endpoint);
+        void clearEndpoints();
+        void setAutoResponse(bool autoResponse);
 
     signals:
-        void rxPortChanged(int port);
-        void addressChanged(QString address);
-        void txPortChanged(int port);
+        void portChanged(int port);
+        void endpointsChanged(const EndpointList& endpoints);
+        void autoResponseChanged(bool autoResponse);
+
+    protected:
+        bool sendDataImpl(const QByteArray& data) override;
 
     private slots:
-        void readPendingDatagrams();
+        void onReadyRead();
 
     private:
         QUdpSocket* m_socket;
-        int m_rxPort;
-        QString m_address;
-        int m_txPort;
+        quint16 m_port;
+        EndpointList m_endpoints;
+        bool m_autoResponse;
     };
 }
 
