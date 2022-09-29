@@ -84,10 +84,10 @@ bool SerialLink::sendDataImpl(const QByteArray& data)
 void SerialLink::readSerialData()
 {
     if (m_port->isReadable()) {
-        std::cout << "Port is readable\n";
-        std::cout << "Read " << m_port->readAll().toHex().toStdString() << std::endl;
+        //std::cout << "Port is readable\n";
+        //std::cout << "Read " << m_port->readAll().toHex().toStdString() << std::endl;
+        this->receiveData(m_port->readAll());
     }
-    //if (m_port->isReadable()) this->receiveData(m_port->readAll());
 }
 
 void SerialLink::onError(int error)
