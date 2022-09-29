@@ -26,13 +26,13 @@ namespace domain
         uint8_t componentId() const;
 
     public slots:
-        void addLink(AbstractLink* link, uint8_t channel);
-        void removeLink(AbstractLink* link);
+        void addLink(domain::AbstractLink* link, uint8_t channel);
+        void removeLink(domain::AbstractLink* link);
 
         void setSystemId(uint8_t systemId);
         void setComponentId(uint8_t componentId);
 
-        void sendMessage(mavlink_message_t& message, AbstractLink* link);
+        void sendMessage(mavlink_message_t& message, domain::AbstractLink* link);
         void sendMessageOnLastReceivedLink(mavlink_message_t& message);
         void sendMessageOnAllLinks(mavlink_message_t& message);
 

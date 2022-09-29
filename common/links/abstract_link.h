@@ -1,6 +1,7 @@
 #ifndef ABSTRACT_LINK_H
 #define ABSTRACT_LINK_H
 
+// Qt
 #include <QObject>
 
 namespace domain
@@ -9,22 +10,39 @@ namespace domain
     {
         Q_OBJECT
 
-        Q_PROPERTY(bool isUp READ isUp NOTIFY upChanged)
-
     public:
         explicit AbstractLink(QObject* parent = nullptr);
 
-        virtual bool isUp() const = 0;
+        virtual bool isConnected() const = 0;
+
+        int takeBytesReceived();
+        int takeBytesSent();
 
     public slots:
-        virtual void up() = 0;
-        virtual void down() = 0;
+        void setConnected(bool connected);
+        virtual void connectLink() = 0;
+        virtual void disconnectLink() = 0;
 
-        virtual void sendData(const QByteArray& data) = 0;
+        void sendData(const QByteArray& data);
 
     signals:
-        void upChanged(bool isUp);
-        void dataReceived(const QByteArray& data);
+        void connectedChanged(bool connected);
+        void errored(QString error);
+        void dataReceived(QByteArray data);
+        void dataSent();
+
+    protected:
+        virtual bool sendDataImpl(const QByteArray& data) = 0;
+
+    protected slots:
+        void receiveData(const QByteArray& data);
+
+    public slots: // QOverload require public
+        void onSocketError(int error);
+
+    private:
+        int m_bytesReceived = 0;
+        int m_bytesSent = 0;
     };
 }
 
