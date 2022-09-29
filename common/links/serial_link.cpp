@@ -38,7 +38,10 @@ void SerialLink::connectLink()
 {
     if (this->isConnected() || m_port->portName().isEmpty()) return;
 
-    if (m_port->open(QIODevice::ReadWrite)) emit connectedChanged(true);
+    if (m_port->open(QIODevice::ReadWrite)) {
+        qDebug() << "Port open for Read/Write";
+        emit connectedChanged(true);
+    }
 }
 
 void SerialLink::disconnectLink()
@@ -67,14 +70,22 @@ void SerialLink::setBaudRate(qint32 baudRate)
 
 bool SerialLink::sendDataImpl(const QByteArray& data)
 {
-    if (m_port->isWritable()) return m_port->write(data.data(), data.size()) > 0;
+    if (m_port->isWritable()) {
+        qDebug() << "Port is writable";
+        bool awrite = m_port->write(data.data(), data.size()) > 0;
+        if (awrite) qDebug() << "Wrote " << data.toHex();
+        return awrite;
+    }
 
     return false;
 }
 
 void SerialLink::readSerialData()
 {
-    if (m_port->isReadable()) qDebug() << m_port->readAll();
+    if (m_port->isReadable()) {
+        qDebug() << "Port is readable";
+        qDebug() << "Read " << m_port->readAll().toHex();
+    }
     //if (m_port->isReadable()) this->receiveData(m_port->readAll());
 }
 

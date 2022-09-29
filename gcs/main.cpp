@@ -20,6 +20,7 @@ int main(int argc, char* argv[])
     //domain::UdpLink link(14550); link.addEndpoint(domain::Endpoint(QHostAddress::LocalHost, 14551));
 
     domain::SerialLink link("/dev/ttyUSB0", 57600);
+    //domain::SerialLink link("/dev/tty.usbserial-AB0MOD9I", 57600);
 
     communicator->addLink(&link, MAVLINK_COMM_0);
     link.connectLink();
