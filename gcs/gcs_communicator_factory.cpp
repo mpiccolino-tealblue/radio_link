@@ -18,7 +18,7 @@ GcsCommunicatorFactory::GcsCommunicatorFactory()
 
 MavLinkCommunicator* GcsCommunicatorFactory::create()
 {
-    MavLinkCommunicator* communicator = new MavLinkCommunicator(1, 200);
+    MavLinkCommunicator* communicator = new MavLinkCommunicator(2, 200);
 
     new domain::HeartbeatHandler(MAV_TYPE_HELICOPTER, communicator);
     new domain::AGUSystemHandler(communicator);
