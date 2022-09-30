@@ -20,7 +20,7 @@ int main(int argc, char* argv[])
     domain::MavLinkCommunicator* communicator = factory.create();
     communicator->setParent(&app);
 
-    domain::SerialLink link("/dev/tty.USB1", 57600);
+    domain::SerialLink link("/dev/ttyUSB1", 57600);
     //domain::SerialLink link("/dev/tty.usbserial-AL01O3PL", 57600);
     //domain::UdpLink link(14551);
     //link.addEndpoint(domain::Endpoint(QHostAddress::LocalHost, 14550));
