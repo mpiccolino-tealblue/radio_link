@@ -4,6 +4,8 @@
 
 // Internal
 #include "../common/links/udp_link.h"
+#include "../common/links/serial_link.h"
+#include "../common/links/endpoint.h"
 
 #include "uav_model.h"
 #include "uav_communicator_factory.h"
@@ -18,8 +20,11 @@ int main(int argc, char* argv[])
     domain::MavLinkCommunicator* communicator = factory.create();
     communicator->setParent(&app);
 
-    domain::UdpLink link(14551);
-    link.addEndpoint(domain::Endpoint(QHostAddress::LocalHost, 14550));
+    domain::SerialLink link("/dev/tty.USB1", 57600);
+    //domain::SerialLink link("/dev/tty.usbserial-AL01O3PL", 57600);
+    //domain::UdpLink link(14551);
+    //link.addEndpoint(domain::Endpoint(QHostAddress::LocalHost, 14550));
+
     communicator->addLink(&link, MAVLINK_COMM_0);
     link.connectLink();
 
